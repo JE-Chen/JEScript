@@ -22,10 +22,6 @@ public class JEScriptReaderTest {
             String readNextChar = jeScriptReader.readNextChar();
             if (readNextChar.equals("-1"))
                 break;
-            if (readNextChar.equals("!") && !retracted) {
-                jeScriptReader.retractBack(1);
-                retracted = true;
-            }
             System.out.print(readNextChar);
         }
         System.out.println();

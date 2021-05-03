@@ -12,7 +12,7 @@ public class JEScriptScannerTest {
 
     @BeforeClass
     public static void setUP() {
-        String testScriptData = "awd:dwlalm;zcmzm(poipo)ewaeewa{dawlda};wkdmaw%151";
+        String testScriptData = "awd:dwlalm;zcmzm(poipo)ewaeewa{dawlda};wkdmaw%151;";
         jeScriptReader = new JEScriptReader(testScriptData);
         jeScriptScanner = new JEScriptScanner(jeScriptReader);
     }

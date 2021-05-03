@@ -5,9 +5,8 @@ public class JEScriptToken {
     private Tokens token;
     private String text;
 
-    public JEScriptToken(Tokens token, String text) {
+    public JEScriptToken(Tokens token) {
         this.token = token;
-        this.text = text;
     }
 
     public Tokens getType() {
@@ -27,12 +26,69 @@ public class JEScriptToken {
     }
 
     public enum Tokens {
-        EOS,
-        COLON, //:
-        SEMICOLON, //;
-        LEFT_PARENTHESES, RIGHT_PARENTHESES, //()
-        LEFT_BRACES, RIGHT_BRACES, //{}
-        MOD //%
+
+        // Variable
+
+        VAR_TOKEN, // var
+
+        // Data type
+
+        INTEGER_TOKEN, // int
+
+        // Symbol Operator
+
+        COLON, // :
+        SEMICOLON, // ;
+        LEFT_PARENTHESES, RIGHT_PARENTHESES, // ()
+        LEFT_BRACES, RIGHT_BRACES, // {}
+
+        // Math Operator
+        PLUS_TOKEN, // +
+        PLUS_PLUS_TOKEN, // ++
+        PLUS_ASSIGN_TOKEN, // +=
+        MINUS_TOKEN, // -
+        MINUS_MINUS_TOKEN, // --
+        MOD_TOKEN, // %
+        MINUS_ASSIGN_TOKEN, // -=
+        MULT_TOKEN, // *
+        DIV_TOKEN, // /
+        GREATER_TOKEN,// >
+        GREATER_EQUAL_TOKEN, // >=
+        LESS_TOKEN, // <
+        LESS_EQUAL_TOKEN, // <=
+
+
+        // Assign Operator
+
+        ASSIGN_TOKEN, // =
+
+        // Compare Operator
+
+        EQUAL_TOKEN, // ==
+
+        // Logic Operator
+        IF_TOKEN, // if
+        ELSE_TOKEN, // else
+        WHILE_TOKEN, // while
+        BOOLEAN_TOKEN, //true, false, TRUE, FALSE
+        AND_TOKEN, // &&
+        OR_TOKEN, // ||
+        NOT_TOKEN, // !!
+
+        // Comment Operator
+        LINE_COMMENT_TOKEN, // #
+        BLOCK_COMMENT_TOKEN, // ##
+
+        // Bit Operator
+
+        // Print
+        PRINT_TOKEN, // print
+
+        // Another
+        IDENTIFIER_TOKEN, // undefined
+
+        // END
+        EOS
     }
 
 }
