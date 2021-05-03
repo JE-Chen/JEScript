@@ -2,6 +2,7 @@ package jescript.reader;
 
 public class JEScriptReader {
 
+    // Data type -> string
     private String scriptData;
     private int scriptReadCurrentPos;
     private int scriptDataLength;
@@ -12,21 +13,17 @@ public class JEScriptReader {
         this.scriptDataLength = scriptData.length();
     }
 
-    public int nextChar(){
-        if(scriptReadCurrentPos >= scriptDataLength)
-            return -1;
-        return scriptData.charAt(scriptReadCurrentPos++);
+    public String readNextChar() {
+        if (scriptReadCurrentPos >= scriptDataLength)
+            return String.valueOf(-1);
+        return String.valueOf(scriptData.charAt(scriptReadCurrentPos++));
     }
 
-    public void retract(int retractNum){
-        if(scriptReadCurrentPos - retractNum < 0)
+    public void retractBack(int retractNum) {
+        if (scriptReadCurrentPos - retractNum < 0)
             scriptReadCurrentPos = 0;
         else
             scriptReadCurrentPos -= retractNum;
-    }
-
-    public void retract(){
-            scriptReadCurrentPos -= 1;
     }
 
 }

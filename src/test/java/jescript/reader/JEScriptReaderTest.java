@@ -12,23 +12,21 @@ public class JEScriptReaderTest {
     @BeforeClass
     public static void setUP() {
         String testScriptData = "test reader \n" +
-                "this is test";
+                "this is test!";
         jeScriptReader = new JEScriptReader(testScriptData);
     }
 
     @Test
     public void testReader() {
         while (true) {
-            int readCharIntegerType = jeScriptReader.nextChar();
-            if (readCharIntegerType == -1)
+            String readNextChar = jeScriptReader.readNextChar();
+            if (readNextChar.equals("-1"))
                 break;
-
-            char readChar = (char) readCharIntegerType;
-            if (readChar == '!' && !retracted) {
-                jeScriptReader.retract();
+            if (readNextChar.equals("!") && !retracted) {
+                jeScriptReader.retractBack(1);
                 retracted = true;
             }
-            System.out.print(readChar);
+            System.out.print(readNextChar);
         }
         System.out.println();
     }
