@@ -18,7 +18,25 @@ public class JEScriptScannerTest {
     }
 
     @Test
+    public void testScannerRandString() {
+        while (true) {
+            JEScriptToken.Tokens token = jeScriptScanner.nextToken();
+            if (token.equals(JEScriptToken.Tokens.EOS))
+                break;
+            System.out.println(token);
+        }
+    }
+
+    @Test
     public void testScanner() {
+
+        String testScriptData = "if(){" +
+                "}" +
+                "else{" +
+                "}" +
+                ";";
+        jeScriptReader = new JEScriptReader(testScriptData);
+        jeScriptScanner = new JEScriptScanner(jeScriptReader);
         while (true) {
             JEScriptToken.Tokens token = jeScriptScanner.nextToken();
             if (token.equals(JEScriptToken.Tokens.EOS))

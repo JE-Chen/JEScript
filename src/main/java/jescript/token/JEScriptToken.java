@@ -39,8 +39,10 @@ public class JEScriptToken {
 
         COLON, // :
         SEMICOLON, // ;
-        LEFT_PARENTHESES, RIGHT_PARENTHESES, // ()
-        LEFT_BRACES, RIGHT_BRACES, // {}
+        LEFT_PARENTHESES, //(
+        RIGHT_PARENTHESES, // )
+        LEFT_BRACES, //{
+        RIGHT_BRACES, // }
 
         // Math Operator
         PLUS_TOKEN, // +
@@ -73,7 +75,7 @@ public class JEScriptToken {
         BOOLEAN_TOKEN, //true, false, TRUE, FALSE
         AND_TOKEN, // &&
         OR_TOKEN, // ||
-        NOT_TOKEN, // !!
+        NOT_TOKEN, // !
 
         // Comment Operator
         LINE_COMMENT_TOKEN, // #

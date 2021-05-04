@@ -6,36 +6,41 @@ import jescript.token.JEScriptToken;
 
 public class JEScriptScanner {
 
-    private JEScriptReader jeScriptReader;
-    private JEScriptToken jeScriptToken;
+    private final JEScriptReader jeScriptReader;
+    private final JEScriptToken jeScriptToken;
+
     private int currentScanLine = 0;
+
     private state scannerState = state.STATE_START;
+
+    private StringBuffer stringBuffer = new StringBuffer();
 
     public JEScriptScanner(JEScriptReader jeScriptReader) {
         this.jeScriptReader = jeScriptReader;
-        this.jeScriptToken = new JEScriptToken(JEScriptToken.Tokens.EOS);
+        jeScriptToken = new JEScriptToken(JEScriptToken.Tokens.EOS);
     }
 
     private JEScriptToken.Tokens makeNextToken(JEScriptToken.Tokens token) {
         jeScriptToken.setType(token);
+        stringBuffer = new StringBuffer();
         return jeScriptToken.getType();
     }
 
     private JEScriptToken.Tokens makeNextToken(JEScriptToken.Tokens token, String text) {
         jeScriptToken.setType(token);
         jeScriptToken.setText(text);
+        stringBuffer = new StringBuffer();
         return jeScriptToken.getType();
     }
 
     public JEScriptToken.Tokens nextToken() {
         while (true) {
-            StringBuilder stringBuilder = new StringBuilder();
             switch (scannerState) {
                 case STATE_START:
                     String readNextChar = jeScriptReader.readNextChar();
                     if (readNextChar.matches("[a-zA-Z]")) {
                         this.scannerState = state.IDENTIFIER_STATE;
-                        stringBuilder.append(readNextChar);
+                        stringBuffer.append(readNextChar);
                     } else {
                         switch (readNextChar) {
                             case ":":
@@ -51,9 +56,21 @@ public class JEScriptScanner {
                             case "}":
                                 return makeNextToken(JEScriptToken.Tokens.RIGHT_PARENTHESES);
                             case "+":
-
+                                return makeNextToken(JEScriptToken.Tokens.PLUS_TOKEN);
+                            case "-":
+                                return makeNextToken(JEScriptToken.Tokens.MINUS_TOKEN);
                             case "%":
                                 return makeNextToken(JEScriptToken.Tokens.MOD_TOKEN);
+                            case "*":
+                                return makeNextToken(JEScriptToken.Tokens.MULT_TOKEN);
+                            case ">":
+                                return makeNextToken(JEScriptToken.Tokens.GREATER_TOKEN);
+                            case "<":
+                                return makeNextToken(JEScriptToken.Tokens.LESS_TOKEN);
+                            case "=":
+                                return makeNextToken(JEScriptToken.Tokens.ASSIGN_TOKEN);
+                            case "#":
+                                return makeNextToken(JEScriptToken.Tokens.LINE_COMMENT_TOKEN);
                             case "-1":
                                 return makeNextToken(JEScriptToken.Tokens.EOS);
                             case "\r":
@@ -66,11 +83,13 @@ public class JEScriptScanner {
                 case IDENTIFIER_STATE:
                     readNextChar = jeScriptReader.readNextChar();
                     if (readNextChar.matches("[a-zA-Z]")) {
-                        stringBuilder.append(readNextChar);
+                        stringBuffer.append(readNextChar);
                     } else {
+                        if (readNextChar.equals("-1"))
+                            return makeNextToken(JEScriptToken.Tokens.EOS);
                         jeScriptReader.retractBack(1);
                         scannerState = state.STATE_START;
-                        String text = stringBuilder.toString();
+                        String text = stringBuffer.toString();
                         switch (text) {
                             case "var":
                                 return makeNextToken(JEScriptToken.Tokens.VAR_TOKEN);
@@ -89,14 +108,11 @@ public class JEScriptScanner {
                             case "while":
                                 return makeNextToken(JEScriptToken.Tokens.WHILE_TOKEN);
                             case "print":
-                                return  makeNextToken(JEScriptToken.Tokens.PRINT_TOKEN);
-                            case "-1":
-                                return makeNextToken(JEScriptToken.Tokens.EOS);
+                                return makeNextToken(JEScriptToken.Tokens.PRINT_TOKEN);
                             default:
                                 return makeNextToken(JEScriptToken.Tokens.IDENTIFIER_TOKEN, text);
                         }
                     }
-                    break;
             }
         }
     }
