@@ -12,13 +12,16 @@ public class JEScriptScannerTest {
 
     @BeforeClass
     public static void setUP() {
-        String testScriptData = "awd:dwlalm;zcmzm(poipo)ewaeewa{dawlda};wkdmaw%151;";
+        String testScriptData = "";
         jeScriptReader = new JEScriptReader(testScriptData);
         jeScriptScanner = new JEScriptScanner(jeScriptReader);
     }
 
     @Test
-    public void testScannerRandString() {
+    public void testScannerWithRandString() {
+        String testScriptData = "awd:dwlalm;zcmzm(poipo)ewaeewa{dawlda};wkdmaw%151;";
+        jeScriptReader = new JEScriptReader(testScriptData);
+        jeScriptScanner = new JEScriptScanner(jeScriptReader);
         while (true) {
             JEScriptToken.Tokens token = jeScriptScanner.nextToken();
             if (token.equals(JEScriptToken.Tokens.EOS))
@@ -28,13 +31,16 @@ public class JEScriptScannerTest {
     }
 
     @Test
-    public void testScanner() {
+    public void testScannerWithRandToken() {
 
         String testScriptData = "if(){" +
                 "}" +
-                "else{" +
+                "else{#!-+" +
                 "}" +
-                ";";
+                ";" +
+                "+= -= * " +
+                "# adawdwadwa" +
+                ">= <= -- ++";
         jeScriptReader = new JEScriptReader(testScriptData);
         jeScriptScanner = new JEScriptScanner(jeScriptReader);
         while (true) {

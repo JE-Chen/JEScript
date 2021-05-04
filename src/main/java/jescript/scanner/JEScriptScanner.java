@@ -38,6 +38,7 @@ public class JEScriptScanner {
             switch (scannerState) {
                 case STATE_START:
                     String readNextChar = jeScriptReader.readNextChar();
+                    String nextChar;
                     if (readNextChar.matches("[a-zA-Z]")) {
                         this.scannerState = state.IDENTIFIER_STATE;
                         stringBuffer.append(readNextChar);
@@ -56,20 +57,48 @@ public class JEScriptScanner {
                             case "}":
                                 return makeNextToken(JEScriptToken.Tokens.RIGHT_PARENTHESES);
                             case "+":
+                                nextChar = jeScriptReader.readNextChar();
+                                if(nextChar.equals("+"))
+                                    return makeNextToken(JEScriptToken.Tokens.PLUS_PLUS_TOKEN);
+                                else if(nextChar.equals("="))
+                                    return makeNextToken(JEScriptToken.Tokens.PLUS_ASSIGN_TOKEN);
+                                jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.PLUS_TOKEN);
                             case "-":
+                                nextChar = jeScriptReader.readNextChar();
+                                if(nextChar.equals("-"))
+                                    return makeNextToken(JEScriptToken.Tokens.MINUS_MINUS_TOKEN);
+                                else if(nextChar.equals("="))
+                                    return makeNextToken(JEScriptToken.Tokens.MINUS_ASSIGN_TOKEN);
+                                jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.MINUS_TOKEN);
                             case "%":
                                 return makeNextToken(JEScriptToken.Tokens.MOD_TOKEN);
                             case "*":
                                 return makeNextToken(JEScriptToken.Tokens.MULT_TOKEN);
                             case ">":
+                                nextChar = jeScriptReader.readNextChar();
+                                if(nextChar.equals("="))
+                                    return makeNextToken(JEScriptToken.Tokens.GREATER_EQUAL_TOKEN);
+                                jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.GREATER_TOKEN);
                             case "<":
+                                nextChar = jeScriptReader.readNextChar();
+                                if(nextChar.equals("="))
+                                    return makeNextToken(JEScriptToken.Tokens.LESS_EQUAL_TOKEN);
+                                jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.LESS_TOKEN);
                             case "=":
+                                nextChar = jeScriptReader.readNextChar();
+                                if(nextChar.equals("="))
+                                    return makeNextToken(JEScriptToken.Tokens.EQUAL_TOKEN);
+                                jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.ASSIGN_TOKEN);
                             case "#":
+                                nextChar = jeScriptReader.readNextChar();
+                                if(nextChar.equals("#"))
+                                    return makeNextToken(JEScriptToken.Tokens.BLOCK_COMMENT_TOKEN);
+                                jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.LINE_COMMENT_TOKEN);
                             case "-1":
                                 return makeNextToken(JEScriptToken.Tokens.EOS);
@@ -120,6 +149,7 @@ public class JEScriptScanner {
     private enum state {
         STATE_START,
         IDENTIFIER_STATE,
+        SLASH_STATE
     }
 
 }

@@ -50,8 +50,8 @@ public class JEScriptToken {
         PLUS_ASSIGN_TOKEN, // +=
         MINUS_TOKEN, // -
         MINUS_MINUS_TOKEN, // --
-        MOD_TOKEN, // %
         MINUS_ASSIGN_TOKEN, // -=
+        MOD_TOKEN, // %
         MULT_TOKEN, // *
         DIV_TOKEN, // /
         GREATER_TOKEN,// >
