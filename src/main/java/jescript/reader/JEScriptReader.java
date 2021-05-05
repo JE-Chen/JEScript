@@ -20,6 +20,8 @@ public class JEScriptReader {
     }
 
     public void retractBack(int retractNum) {
+        if(scriptReadCurrentPos>= scriptDataLength)
+            return;
         if (scriptReadCurrentPos - retractNum < 0)
             scriptReadCurrentPos = 0;
         else

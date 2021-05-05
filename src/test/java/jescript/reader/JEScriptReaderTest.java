@@ -27,9 +27,4 @@ public class JEScriptReaderTest {
         System.out.println();
     }
 
-    @Test
-    public void testChar(){
-        System.out.println("e".matches("[a-zA-Z]"));
-    }
-
 }

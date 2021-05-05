@@ -64,8 +64,7 @@ public class JEScriptScanner {
                                     return makeNextToken(JEScriptToken.Tokens.PLUS_PLUS_TOKEN);
                                 else if (nextChar.equals("="))
                                     return makeNextToken(JEScriptToken.Tokens.PLUS_ASSIGN_TOKEN);
-                                if (!nextChar.equals("-1"))
-                                    jeScriptReader.retractBack(1);
+                                jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.PLUS_TOKEN);
                             case "-":
                                 nextChar = jeScriptReader.readNextChar();
@@ -73,8 +72,7 @@ public class JEScriptScanner {
                                     return makeNextToken(JEScriptToken.Tokens.MINUS_MINUS_TOKEN);
                                 else if (nextChar.equals("="))
                                     return makeNextToken(JEScriptToken.Tokens.MINUS_ASSIGN_TOKEN);
-                                if (!nextChar.equals("-1"))
-                                    jeScriptReader.retractBack(1);
+                                jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.MINUS_TOKEN);
                             case "%":
                                 return makeNextToken(JEScriptToken.Tokens.MOD_TOKEN);
@@ -87,22 +85,19 @@ public class JEScriptScanner {
                                 nextChar = jeScriptReader.readNextChar();
                                 if (nextChar.equals("="))
                                     return makeNextToken(JEScriptToken.Tokens.GREATER_EQUAL_TOKEN);
-                                if (!nextChar.equals("-1"))
-                                    jeScriptReader.retractBack(1);
+                                jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.GREATER_TOKEN);
                             case "<":
                                 nextChar = jeScriptReader.readNextChar();
                                 if (nextChar.equals("="))
                                     return makeNextToken(JEScriptToken.Tokens.LESS_EQUAL_TOKEN);
-                                if (!nextChar.equals("-1"))
-                                    jeScriptReader.retractBack(1);
+                                jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.LESS_TOKEN);
                             case "=":
                                 nextChar = jeScriptReader.readNextChar();
                                 if (nextChar.equals("="))
                                     return makeNextToken(JEScriptToken.Tokens.EQUAL_TOKEN);
-                                if (!nextChar.equals("-1"))
-                                    jeScriptReader.retractBack(1);
+                                jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.ASSIGN_TOKEN);
                             case "-1":
                                 return makeNextToken(JEScriptToken.Tokens.EOS);
