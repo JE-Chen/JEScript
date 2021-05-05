@@ -155,8 +155,7 @@ public class JEScriptScanner {
                                 stringBuffer.append(readNextChar);
                                 readNextChar = jeScriptReader.readNextChar();
                             }
-                            if (!readNextChar.equals("-1"))
-                                jeScriptReader.retractBack(1);
+                            jeScriptReader.retractBack(1);
                         }
                         String text = stringBuffer.toString();
                         stringBuffer = new StringBuffer();
@@ -186,8 +185,7 @@ public class JEScriptScanner {
                         return makeNextToken(JEScriptToken.Tokens.BLOCK_COMMENT_TOKEN, stringBuffer.toString());
                     } else {
                         scannerState = state.START_STATE;
-                        if (!readNextChar.equals("-1"))
-                            jeScriptReader.retractBack(1);
+                        jeScriptReader.retractBack(1);
                         return makeNextToken(JEScriptToken.Tokens.DIV_TOKEN);
                     }
             }
