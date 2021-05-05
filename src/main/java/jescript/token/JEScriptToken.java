@@ -78,8 +78,8 @@ public class JEScriptToken {
         NOT_TOKEN, // !
 
         // Comment Operator
-        LINE_COMMENT_TOKEN, // #
-        BLOCK_COMMENT_TOKEN, // ##
+        LINE_COMMENT_TOKEN, // //
+        BLOCK_COMMENT_TOKEN, // /*
 
         // Bit Operator
 

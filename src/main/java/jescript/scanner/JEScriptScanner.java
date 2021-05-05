@@ -11,7 +11,7 @@ public class JEScriptScanner {
 
     private int currentScanLine = 0;
 
-    private state scannerState = state.STATE_START;
+    private state scannerState = state.START_STATE;
 
     private StringBuffer stringBuffer = new StringBuffer();
 
@@ -36,13 +36,15 @@ public class JEScriptScanner {
     public JEScriptToken.Tokens nextToken() {
         while (true) {
             switch (scannerState) {
-                case STATE_START:
+                case START_STATE:
                     String readNextChar = jeScriptReader.readNextChar();
-                    String nextChar;
+                    String nextChar = "";
                     if (readNextChar.matches("[a-zA-Z]")) {
                         this.scannerState = state.IDENTIFIER_STATE;
                         stringBuffer.append(readNextChar);
                     } else {
+                        if (readNextChar.equals("\n") || readNextChar.equals("\r"))
+                            currentScanLine++;
                         switch (readNextChar) {
                             case ":":
                                 return makeNextToken(JEScriptToken.Tokens.COLON);
@@ -58,57 +60,57 @@ public class JEScriptScanner {
                                 return makeNextToken(JEScriptToken.Tokens.RIGHT_PARENTHESES);
                             case "+":
                                 nextChar = jeScriptReader.readNextChar();
-                                if(nextChar.equals("+"))
+                                if (nextChar.equals("+"))
                                     return makeNextToken(JEScriptToken.Tokens.PLUS_PLUS_TOKEN);
-                                else if(nextChar.equals("="))
+                                else if (nextChar.equals("="))
                                     return makeNextToken(JEScriptToken.Tokens.PLUS_ASSIGN_TOKEN);
-                                jeScriptReader.retractBack(1);
+                                if (!nextChar.equals("-1"))
+                                    jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.PLUS_TOKEN);
                             case "-":
                                 nextChar = jeScriptReader.readNextChar();
-                                if(nextChar.equals("-"))
+                                if (nextChar.equals("-"))
                                     return makeNextToken(JEScriptToken.Tokens.MINUS_MINUS_TOKEN);
-                                else if(nextChar.equals("="))
+                                else if (nextChar.equals("="))
                                     return makeNextToken(JEScriptToken.Tokens.MINUS_ASSIGN_TOKEN);
-                                jeScriptReader.retractBack(1);
+                                if (!nextChar.equals("-1"))
+                                    jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.MINUS_TOKEN);
                             case "%":
                                 return makeNextToken(JEScriptToken.Tokens.MOD_TOKEN);
                             case "*":
                                 return makeNextToken(JEScriptToken.Tokens.MULT_TOKEN);
+                            case "/":
+                                scannerState = state.SLASH_STATE;
+                                break;
                             case ">":
                                 nextChar = jeScriptReader.readNextChar();
-                                if(nextChar.equals("="))
+                                if (nextChar.equals("="))
                                     return makeNextToken(JEScriptToken.Tokens.GREATER_EQUAL_TOKEN);
-                                jeScriptReader.retractBack(1);
+                                if (!nextChar.equals("-1"))
+                                    jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.GREATER_TOKEN);
                             case "<":
                                 nextChar = jeScriptReader.readNextChar();
-                                if(nextChar.equals("="))
+                                if (nextChar.equals("="))
                                     return makeNextToken(JEScriptToken.Tokens.LESS_EQUAL_TOKEN);
-                                jeScriptReader.retractBack(1);
+                                if (!nextChar.equals("-1"))
+                                    jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.LESS_TOKEN);
                             case "=":
                                 nextChar = jeScriptReader.readNextChar();
-                                if(nextChar.equals("="))
+                                if (nextChar.equals("="))
                                     return makeNextToken(JEScriptToken.Tokens.EQUAL_TOKEN);
-                                jeScriptReader.retractBack(1);
+                                if (!nextChar.equals("-1"))
+                                    jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.ASSIGN_TOKEN);
-                            case "#":
-                                nextChar = jeScriptReader.readNextChar();
-                                if(nextChar.equals("#"))
-                                    return makeNextToken(JEScriptToken.Tokens.BLOCK_COMMENT_TOKEN);
-                                jeScriptReader.retractBack(1);
-                                return makeNextToken(JEScriptToken.Tokens.LINE_COMMENT_TOKEN);
                             case "-1":
                                 return makeNextToken(JEScriptToken.Tokens.EOS);
-                            case "\r":
-                            case "\n":
-                                currentScanLine++;
                             default:
                         }
                         break;
                     }
+                    break;
                 case IDENTIFIER_STATE:
                     readNextChar = jeScriptReader.readNextChar();
                     if (readNextChar.matches("[a-zA-Z]")) {
@@ -117,7 +119,7 @@ public class JEScriptScanner {
                         if (readNextChar.equals("-1"))
                             return makeNextToken(JEScriptToken.Tokens.EOS);
                         jeScriptReader.retractBack(1);
-                        scannerState = state.STATE_START;
+                        scannerState = state.START_STATE;
                         String text = stringBuffer.toString();
                         switch (text) {
                             case "var":
@@ -142,12 +144,58 @@ public class JEScriptScanner {
                                 return makeNextToken(JEScriptToken.Tokens.IDENTIFIER_TOKEN, text);
                         }
                     }
+                    break;
+                case SLASH_STATE:
+                    readNextChar = jeScriptReader.readNextChar();
+                    if (readNextChar.equals("/")) {
+                        stringBuffer = new StringBuffer();
+                        readNextChar = jeScriptReader.readNextChar();
+                        if (!readNextChar.equals("\n") && !readNextChar.equals("\r") && !readNextChar.equals("-1")) {
+                            while (!readNextChar.equals("\n") && !readNextChar.equals("\r") && !readNextChar.equals("-1")) {
+                                stringBuffer.append(readNextChar);
+                                readNextChar = jeScriptReader.readNextChar();
+                            }
+                            if (!readNextChar.equals("-1"))
+                                jeScriptReader.retractBack(1);
+                        }
+                        String text = stringBuffer.toString();
+                        stringBuffer = new StringBuffer();
+                        scannerState = state.START_STATE;
+                        return makeNextToken(JEScriptToken.Tokens.LINE_COMMENT_TOKEN, text);
+                    } else if (readNextChar.equals("*")) {
+                        stringBuffer = new StringBuffer();
+                        boolean commentEnd = false;
+                        while (!commentEnd) {
+                            readNextChar = jeScriptReader.readNextChar();
+                            if (!readNextChar.equals("-1")) {
+                                if (readNextChar.equals("\n") || readNextChar.equals("\r"))
+                                    currentScanLine++;
+                                if (readNextChar.equals("*")) {
+                                    readNextChar = jeScriptReader.readNextChar();
+                                    if (readNextChar.equals("/"))
+                                        commentEnd = true;
+                                    else
+                                        stringBuffer.append("*").append(readNextChar);
+                                } else {
+                                    stringBuffer.append(readNextChar);
+                                }
+                            } else
+                                commentEnd = true;
+                        }
+                        scannerState = state.START_STATE;
+                        return makeNextToken(JEScriptToken.Tokens.BLOCK_COMMENT_TOKEN, stringBuffer.toString());
+                    } else {
+                        scannerState = state.START_STATE;
+                        if (!readNextChar.equals("-1"))
+                            jeScriptReader.retractBack(1);
+                        return makeNextToken(JEScriptToken.Tokens.DIV_TOKEN);
+                    }
             }
         }
     }
 
     private enum state {
-        STATE_START,
+        START_STATE,
         IDENTIFIER_STATE,
         SLASH_STATE
     }

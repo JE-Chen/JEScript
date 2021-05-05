@@ -33,14 +33,10 @@ public class JEScriptScannerTest {
     @Test
     public void testScannerWithRandToken() {
 
-        String testScriptData = "if(){" +
-                "}" +
-                "else{#!-+" +
-                "}" +
-                ";" +
-                "+= -= * " +
-                "# adawdwadwa" +
-                ">= <= -- ++";
+        String testScriptData = "if(){}else{#!-+};+= -= * //adawdwadwa"
+                + System.lineSeparator() + "//dwadwawda"
+                + System.lineSeparator() + "dwadadwa"
+                + System.lineSeparator() + "/ * +";
         jeScriptReader = new JEScriptReader(testScriptData);
         jeScriptScanner = new JEScriptScanner(jeScriptReader);
         while (true) {
