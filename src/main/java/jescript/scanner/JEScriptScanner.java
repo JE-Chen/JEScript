@@ -33,6 +33,10 @@ public class JEScriptScanner {
         return jeScriptToken.getType();
     }
 
+    public JEScriptToken getJeScriptToken() {
+        return jeScriptToken;
+    }
+
     public JEScriptToken.Tokens nextToken() {
         while (true) {
             switch (scannerState) {

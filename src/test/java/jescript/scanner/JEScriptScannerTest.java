@@ -2,19 +2,26 @@ package jescript.scanner;
 
 import jescript.reader.JEScriptReader;
 import jescript.token.JEScriptToken;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class JEScriptScannerTest {
 
-    static JEScriptReader jeScriptReader;
-    static JEScriptScanner jeScriptScanner;
+    private static JEScriptReader jeScriptReader;
+    private static JEScriptScanner jeScriptScanner;
 
-    @BeforeClass
-    public static void setUP() {
+    @Test
+    public void testSetUP() {
+        System.out.println("------------------------------");
+        System.out.println("testSetUP start");
+        System.out.println("------------------------------");
         String testScriptData = "";
         jeScriptReader = new JEScriptReader(testScriptData);
         jeScriptScanner = new JEScriptScanner(jeScriptReader);
+        System.out.println("------------------------------");
+        System.out.println("testSetUP end");
+        System.out.println("------------------------------");
+        System.out.println();
+        System.out.println();
     }
 
     @Test
@@ -43,7 +50,7 @@ public class JEScriptScannerTest {
         System.out.println("------------------------------");
         System.out.println("testScannerWithRandToken start");
         System.out.println("------------------------------");
-        String testScriptData = "if(){}else{#!-+};+= -= * //adawdwadwa"
+        String testScriptData = "++if(){}else{#!-+};+= -= * //adawdwadwa"
                 + System.lineSeparator() + "//dwadwawda"
                 + System.lineSeparator() + "dwadadwa"
                 + System.lineSeparator() + "/ * +";

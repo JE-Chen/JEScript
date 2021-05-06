@@ -2,8 +2,8 @@ package jescript.token;
 
 public class JEScriptToken {
 
-    private Tokens token;
-    private String text;
+    private Tokens token = Tokens.EOS;
+    private String text = "default";
 
     public JEScriptToken(Tokens token) {
         this.token = token;
