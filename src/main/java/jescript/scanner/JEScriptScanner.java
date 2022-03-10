@@ -15,6 +15,8 @@ public class JEScriptScanner {
 
     private StringBuffer stringBuffer = new StringBuffer();
 
+    private StringBuffer scriptStringBuffer = new StringBuffer();
+
     public JEScriptScanner(JEScriptReader jeScriptReader) {
         this.jeScriptReader = jeScriptReader;
         jeScriptToken = new JEScriptToken(JEScriptToken.Tokens.EOS);
@@ -46,9 +48,13 @@ public class JEScriptScanner {
                     if (readNextChar.matches("[a-zA-Z]")) {
                         this.scannerState = state.IDENTIFIER_STATE;
                         stringBuffer.append(readNextChar);
+                        scriptStringBuffer.append(readNextChar);
                     } else {
-                        if (readNextChar.equals("\n") || readNextChar.equals("\r"))
+                        if (readNextChar.equals("\n") || readNextChar.equals("\r")) {
                             currentScanLine++;
+                        }
+                        if (!readNextChar.equals("/") && !readNextChar.equals("-1"))
+                            scriptStringBuffer.append(readNextChar);
                         switch (readNextChar) {
                             case ":":
                                 return makeNextToken(JEScriptToken.Tokens.COLON);
@@ -64,18 +70,26 @@ public class JEScriptScanner {
                                 return makeNextToken(JEScriptToken.Tokens.RIGHT_PARENTHESES);
                             case "+":
                                 nextChar = jeScriptReader.readNextChar();
-                                if (nextChar.equals("+"))
+                                if (nextChar.equals("+")) {
+                                    scriptStringBuffer.append(nextChar);
                                     return makeNextToken(JEScriptToken.Tokens.PLUS_PLUS_TOKEN);
-                                else if (nextChar.equals("="))
+                                }
+                                else if (nextChar.equals("=")) {
+                                    scriptStringBuffer.append(nextChar);
                                     return makeNextToken(JEScriptToken.Tokens.PLUS_ASSIGN_TOKEN);
+                                }
                                 jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.PLUS_TOKEN);
                             case "-":
                                 nextChar = jeScriptReader.readNextChar();
-                                if (nextChar.equals("-"))
+                                if (nextChar.equals("-")) {
+                                    scriptStringBuffer.append(nextChar);
                                     return makeNextToken(JEScriptToken.Tokens.MINUS_MINUS_TOKEN);
-                                else if (nextChar.equals("="))
+                                }
+                                else if (nextChar.equals("=")) {
+                                    scriptStringBuffer.append(nextChar);
                                     return makeNextToken(JEScriptToken.Tokens.MINUS_ASSIGN_TOKEN);
+                                }
                                 jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.MINUS_TOKEN);
                             case "%":
@@ -87,20 +101,26 @@ public class JEScriptScanner {
                                 break;
                             case ">":
                                 nextChar = jeScriptReader.readNextChar();
-                                if (nextChar.equals("="))
+                                if (nextChar.equals("=")) {
+                                    scriptStringBuffer.append(nextChar);
                                     return makeNextToken(JEScriptToken.Tokens.GREATER_EQUAL_TOKEN);
+                                }
                                 jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.GREATER_TOKEN);
                             case "<":
                                 nextChar = jeScriptReader.readNextChar();
-                                if (nextChar.equals("="))
+                                if (nextChar.equals("=")) {
+                                    scriptStringBuffer.append(nextChar);
                                     return makeNextToken(JEScriptToken.Tokens.LESS_EQUAL_TOKEN);
+                                }
                                 jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.LESS_TOKEN);
                             case "=":
                                 nextChar = jeScriptReader.readNextChar();
-                                if (nextChar.equals("="))
+                                if (nextChar.equals("=")) {
+                                    scriptStringBuffer.append(nextChar);
                                     return makeNextToken(JEScriptToken.Tokens.EQUAL_TOKEN);
+                                }
                                 jeScriptReader.retractBack(1);
                                 return makeNextToken(JEScriptToken.Tokens.ASSIGN_TOKEN);
                             case "-1":
@@ -114,6 +134,7 @@ public class JEScriptScanner {
                     readNextChar = jeScriptReader.readNextChar();
                     if (readNextChar.matches("[a-zA-Z]")) {
                         stringBuffer.append(readNextChar);
+                        scriptStringBuffer.append(readNextChar);
                     } else {
                         if (readNextChar.equals("-1"))
                             return makeNextToken(JEScriptToken.Tokens.EOS);
@@ -183,6 +204,7 @@ public class JEScriptScanner {
                         scannerState = state.START_STATE;
                         return makeNextToken(JEScriptToken.Tokens.BLOCK_COMMENT_TOKEN, stringBuffer.toString());
                     } else {
+                        scriptStringBuffer.append("/");
                         scannerState = state.START_STATE;
                         jeScriptReader.retractBack(1);
                         return makeNextToken(JEScriptToken.Tokens.DIV_TOKEN);
@@ -197,4 +219,7 @@ public class JEScriptScanner {
         SLASH_STATE
     }
 
+    public String getScriptStringBufferString() {
+        return scriptStringBuffer.toString();
+    }
 }

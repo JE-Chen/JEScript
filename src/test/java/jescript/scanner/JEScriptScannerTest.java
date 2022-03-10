@@ -17,6 +17,7 @@ public class JEScriptScannerTest {
         String testScriptData = "";
         jeScriptReader = new JEScriptReader(testScriptData);
         jeScriptScanner = new JEScriptScanner(jeScriptReader);
+        System.out.println(jeScriptScanner.getScriptStringBufferString());
         System.out.println("------------------------------");
         System.out.println("testSetUP end");
         System.out.println("------------------------------");
@@ -38,6 +39,7 @@ public class JEScriptScannerTest {
                 break;
             System.out.println(token);
         }
+        System.out.println(jeScriptScanner.getScriptStringBufferString());
         System.out.println("------------------------------");
         System.out.println("testScannerWithRandString end");
         System.out.println("------------------------------");
@@ -50,7 +52,7 @@ public class JEScriptScannerTest {
         System.out.println("------------------------------");
         System.out.println("testScannerWithRandToken start");
         System.out.println("------------------------------");
-        String testScriptData = "++if(){}else{#!-+};+= -= * //adawdwadwa"
+        String testScriptData = "++if(){}else{#!-+};+= -= * int //adawdwadwa"
                 + System.lineSeparator() + "//dwadwawda"
                 + System.lineSeparator() + "dwadadwa"
                 + System.lineSeparator() + "/ * +";
@@ -62,8 +64,36 @@ public class JEScriptScannerTest {
                 break;
             System.out.println(token);
         }
+        System.out.println(jeScriptScanner.getScriptStringBufferString());
         System.out.println("------------------------------");
         System.out.println("testScannerWithRandToken end");
+        System.out.println("------------------------------");
+        System.out.println();
+        System.out.println();
+    }
+
+    @Test
+    public void testScannerWithJava() {
+        System.out.println("------------------------------");
+        System.out.println("testScannerWithJava start");
+        System.out.println("------------------------------");
+        String testScriptData = "public class HelloWorld {\n" +
+                "//this is an comment\n"+
+                "    public static void main(String[] args) {\n" +
+                "        System.out.println(\"Hello! World!\");\n" +
+                "    }\n" +
+                "}";
+        jeScriptReader = new JEScriptReader(testScriptData);
+        jeScriptScanner = new JEScriptScanner(jeScriptReader);
+        while (true) {
+            JEScriptToken.Tokens token = jeScriptScanner.nextToken();
+            if (token.equals(JEScriptToken.Tokens.EOS))
+                break;
+            System.out.println(token);
+        }
+        System.out.println(jeScriptScanner.getScriptStringBufferString());
+        System.out.println("------------------------------");
+        System.out.println("testScannerWithJava end");
         System.out.println("------------------------------");
         System.out.println();
         System.out.println();
