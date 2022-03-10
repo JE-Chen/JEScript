@@ -14,7 +14,7 @@ public class FileChooser{
     public File chooseFile() {
         File selectedFile = null;
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Choose data file", "txt", "json", "je"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Choose data file", "txt", "json", "java"));
         int returnValue = fileChooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             selectedFile = fileChooser.getSelectedFile();

@@ -77,11 +77,13 @@ public class JEScriptScannerTest {
         System.out.println("------------------------------");
         System.out.println("testScannerWithJava start");
         System.out.println("------------------------------");
-        String testScriptData = "public class HelloWorld {\n" +
+        String testScriptData =
+                "public class HelloWorld {\n" +
                 "//this is an comment\n"+
                 "    public static void main(String[] args) {\n" +
                 "        System.out.println(\"Hello! World!\");\n" +
-                "    }\n" +
+                "  /*jlkjlkjlkjlk" +
+                        "jhkjh*/  }\n" +
                 "}";
         jeScriptReader = new JEScriptReader(testScriptData);
         jeScriptScanner = new JEScriptScanner(jeScriptReader);

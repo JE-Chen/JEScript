@@ -1,6 +1,11 @@
 # JEScript
 
 ---
+You can run src/main/java/test/ReadAndProcessScript
+
+and choose TestJavaFile to check Token and Script after process
+
+---
 ### Intro
 * a test compile and vm write by java
 ---
